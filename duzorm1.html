@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>INTERAKTYWNE KARTY PRACY</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+	  margin: 0px;
+	  overflow: hidden;
+    }
+
+    .fraction {
+      display: inline-block;
+      text-align: center;
+      margin: 0 6px;
+      vertical-align: middle;
+    }
+
+    .fraction-input {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #000;
+      margin: 2px;
+      font-size: 18px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .readonly-input {
+      background-color: #eee;
+      pointer-events: none;
+      border: 1px solid #000;
+    }
+
+    .fraction .top {
+      border-bottom: 2px solid #000;
+      height: 2px;
+      margin: 2px 0;
+    }
+
+    .mixed-number {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 8px;
+    }
+
+    .button {
+      margin-top: 10px;
+      padding: 6px 12px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .exercise {
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+	<h2>Dodawanie ułamków zwykłych o różnych mianownikach - poziom 1</h2>
+	<p>Rozwiąż poniższe zadania, wykonując dodawanie ułamków. Kliknij "Sprawdź", aby zobaczyć, czy odpowiedź jest poprawna.</p>
+  <div id="exercises"></div>
+		
+
+  <script>
+    const exercises = [
+      { task: ['3','4','1','2'], answers: ['3','4','2','4','5','4','1','1','4'] },
+      { task: ['1','3','5','6'], answers: ['2','6','5','6','7','6','1','1','6'] },
+      { task: ['7','8','9','16'], answers: ['14','16','9','16','25','16','1','9','16'] },
+      { task: ['5','8','3','4'], answers: ['5','8','6','8','11','8','1','3','8'] },
+      { task: ['11','12','2','3'], answers: ['11','12','8','12','19','12','1','7','12'] },
+      { task: ['4','5','5','10'], answers: ['8','10','5','10','13','10','1','3','10'] },
+      { task: ['8','15','3','5'], answers: ['8','15','9','15','17','15','1','2','15'] },
+      { task: ['3','4','12','20'], answers: ['15','20','12','20','27','20','1','7','20'] },
+      { task: ['5','6','14','18'], answers: ['15','18','14','18','29','18','1','11','18'] },
+      { task: ['2','3','7','9'], answers: ['6','9','7','9','13','9','1','4','9'] }
+    ];
+
+    const container = document.getElementById('exercises');
+
+    exercises.forEach((ex, index) => {
+      const div = document.createElement('div');
+      div.className = 'exercise';
+
+      const label = document.createElement('p');
+      label.innerHTML = `<strong>Zadanie ${index + 1}:</strong>`;
+      div.appendChild(label);
+
+      const inputs = [];
+
+      function createFractionValue(numValue, denValue, readonly = false, idPrefix = '') {
+        const frac = document.createElement('span');
+        frac.className = 'fraction';
+
+        const num = document.createElement('input');
+        num.className = 'fraction-input';
+        if (readonly) num.classList.add('readonly-input');
+        num.value = numValue;
+        if (readonly) num.setAttribute('readonly', true);
+        if (idPrefix) num.id = `${idPrefix}_n`;
+
+        const line = document.createElement('div');
+        line.className = 'top';
+
+        const den = document.createElement('input');
+        den.className = 'fraction-input';
+        if (readonly) den.classList.add('readonly-input');
+        den.value = denValue;
+        if (readonly) den.setAttribute('readonly', true);
+        if (idPrefix) den.id = `${idPrefix}_d`;
+
+        frac.appendChild(num);
+        frac.appendChild(line);
+        frac.appendChild(den);
+
+        if (!readonly) inputs.push(num, den);
+        return frac;
+      }
+
+      function createMixedNumber(idPrefix) {
+        const wrapper = document.createElement('span');
+        wrapper.className = 'mixed-number';
+
+        const whole = document.createElement('input');
+        whole.className = 'fraction-input';
+        whole.id = `${idPrefix}_w`;
+        inputs.push(whole);
+
+        const frac = createFractionValue('', '', false, idPrefix);
+        wrapper.appendChild(whole);
+        wrapper.appendChild(frac);
+
+        return wrapper;
+      }
+
+      // Zadanie (readonly ułamki)
+      div.appendChild(createFractionValue(ex.task[0], ex.task[1], true));
+      div.appendChild(document.createTextNode(' + '));
+      div.appendChild(createFractionValue(ex.task[2], ex.task[3], true));
+      div.appendChild(document.createTextNode(' = '));
+
+      // Wspólny mianownik
+      div.appendChild(createFractionValue('', '', false, `ex${index}_s1`));
+      div.appendChild(document.createTextNode(' + '));
+      div.appendChild(createFractionValue('', '', false, `ex${index}_s2`));
+      div.appendChild(document.createTextNode(' = '));
+
+      // Suma ułamków
+      div.appendChild(createFractionValue('', '', false, `ex${index}_sum`));
+      div.appendChild(document.createTextNode(' = '));
+
+      // Wynik jako liczba mieszana
+      div.appendChild(createMixedNumber(`ex${index}_mixed`));
+
+      const checkBtn = document.createElement('button');
+      checkBtn.className = 'button';
+      checkBtn.textContent = 'Sprawdź';
+
+      const result = document.createElement('div');
+      result.className = 'result';
+
+      checkBtn.onclick = () => {
+        const correct = ex.answers;
+        let allInputs = inputs.map(input => input.value.trim());
+        let isCorrect = allInputs.length === correct.length && allInputs.every((val, i) => val === correct[i]);
+        result.textContent = isCorrect ? '✅ Brawo! Poprawna odpowiedź!' : '❌ Spróbuj jeszcze raz.';
+      };
+
+      div.appendChild(document.createElement('br'));
+      div.appendChild(checkBtn);
+      div.appendChild(result);
+
+      container.appendChild(div);
+    });
+  </script>
+</body>
+</html>
