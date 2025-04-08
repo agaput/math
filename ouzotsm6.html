@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>Interaktywna karta pracy</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .fraction { display: inline-block; text-align: center; margin: 0 4px; vertical-align: middle; }
+    .fraction-input { width: 40px; height: 40px; border: 1px solid #000; font-size: 18px; text-align: center; }
+    .readonly-input { background-color: #eee; pointer-events: none; border: 1px solid #000; }
+    .fraction .top { border-bottom: 2px solid #000; height: 2px; margin: 2px 0; }
+    .button { margin-top: 10px; padding: 6px 12px; font-size: 16px; cursor: pointer; }
+    .result { margin-top: 10px; font-weight: bold; }
+    .exercise { margin-bottom: 30px; }
+  </style>
+</head>
+<body>
+  <h2>Odejmowanie ułamków zwykłych o tych samych mianownikach - poziom 6</h2>
+  <p>Uzupełnij oba etapy odejmowania. Wyniki wpisz w postaci liczby mieszanej.</p>
+  <div id="exercises"></div>
+  <script>
+    const exercises = [{"task": ["10", "6", "10", "3", "9", "10"], "answer": ["6", "7", "10"]}, {"task": ["12", "3", "12", "4", "8", "12"], "answer": ["7", "7", "12"]}, {"task": ["9", "4", "11", "7", "6", "11"], "answer": ["1", "9", "11"]}, {"task": ["11", "2", "7", "6", "4", "7"], "answer": ["4", "5", "7"]}, {"task": ["18", "6", "11", "10", "9", "11"], "answer": ["7", "8", "11"]}, {"task": ["17", "1", "3", "10", "2", "3"], "answer": ["6", "2", "3"]}, {"task": ["12", "6", "17", "9", "10", "17"], "answer": ["2", "13", "17"]}, {"task": ["10", "4", "14", "8", "5", "14"], "answer": ["1", "13", "14"]}, {"task": ["7", "3", "11", "4", "6", "11"], "answer": ["2", "8", "11"]}, {"task": ["11", "1", "14", "8", "10", "14"], "answer": ["2", "5", "14"]}];
+    const container = document.getElementById('exercises');
+
+    function createFraction(num, den, readonly = false) {
+      const frac = document.createElement('span');
+      frac.className = 'fraction';
+      const numerator = document.createElement('input');
+      numerator.className = 'fraction-input';
+      numerator.value = num;
+      if (readonly) {
+        numerator.setAttribute('readonly', true);
+        numerator.classList.add('readonly-input');
+      }
+      const line = document.createElement('div');
+      line.className = 'top';
+      const denominator = document.createElement('input');
+      denominator.className = 'fraction-input';
+      denominator.value = den;
+      if (readonly) {
+        denominator.setAttribute('readonly', true);
+        denominator.classList.add('readonly-input');
+      }
+      frac.appendChild(numerator);
+      frac.appendChild(line);
+      frac.appendChild(denominator);
+      return [frac, numerator, denominator];
+    }
+
+    exercises.forEach((ex, index) => {
+      const div = document.createElement('div');
+      div.className = 'exercise';
+
+      const label = document.createElement('p');
+      label.innerHTML = "<strong>Zadanie " + (index + 1) + ":</strong>";
+      div.appendChild(label);
+
+      // Pierwsza liczba mieszana
+      const w1 = document.createElement('input');
+      w1.className = 'fraction-input readonly-input';
+      w1.value = ex.task[0];
+      div.appendChild(w1);
+      const [frac1] = createFraction(ex.task[1], ex.task[2], true);
+      div.appendChild(frac1);
+
+      div.appendChild(document.createTextNode(" − "));
+
+      // Druga liczba mieszana
+      const w2 = document.createElement('input');
+      w2.className = 'fraction-input readonly-input';
+      w2.value = ex.task[3];
+      div.appendChild(w2);
+      const [frac2] = createFraction(ex.task[4], ex.task[5], true);
+      div.appendChild(frac2);
+
+      // Pierwszy znak =
+      div.appendChild(document.createTextNode(" = "));
+
+      // Uczeń wpisuje pośredni krok (liczba mieszana)
+      const step1Whole = document.createElement('input');
+      step1Whole.className = 'fraction-input';
+      div.appendChild(step1Whole);
+      const [step1Frac, step1Num, step1Den] = createFraction('', '', false);
+      div.appendChild(step1Frac);
+
+      div.appendChild(document.createTextNode(" − "));
+
+      const step2Whole = document.createElement('input');
+      step2Whole.className = 'fraction-input';
+      div.appendChild(step2Whole);
+      const [step2Frac, step2Num, step2Den] = createFraction('', '', false);
+      div.appendChild(step2Frac);
+
+      div.appendChild(document.createTextNode(" = "));
+
+      // Odpowiedź końcowa (liczba mieszana)
+      const resultWhole = document.createElement('input');
+      resultWhole.className = 'fraction-input';
+      div.appendChild(resultWhole);
+      const [resultFrac, resultNum, resultDen] = createFraction('', '', false);
+      div.appendChild(resultFrac);
+
+      const checkBtn = document.createElement('button');
+      checkBtn.className = 'button';
+      checkBtn.textContent = 'Sprawdź';
+      const result = document.createElement('div');
+      result.className = 'result';
+
+      checkBtn.onclick = () => {
+        const correct = ex.answer;
+        const finalValues = [resultWhole.value.trim(), resultNum.value.trim(), resultDen.value.trim()];
+        const isCorrect = finalValues[0] === correct[0] && finalValues[1] === correct[1] && finalValues[2] === correct[2];
+        result.textContent = isCorrect ? '✅ Brawo!' : '❌ Spróbuj jeszcze raz.';
+      };
+
+      div.appendChild(document.createElement("br"));
+      div.appendChild(checkBtn);
+      div.appendChild(result);
+      container.appendChild(div);
+    });
+  </script>
+</body>
+</html>

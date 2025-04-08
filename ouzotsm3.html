@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>INTERAKTYWNE KARTY PRACY</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .fraction {
+      display: inline-block;
+      text-align: center;
+      margin: 0 4px;
+      vertical-align: middle;
+    }
+    .fraction-input {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #000;
+      font-size: 18px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .readonly-input {
+      background-color: #eee;
+      pointer-events: none;
+      border: 1px solid #000;
+    }
+    .fraction .top {
+      border-bottom: 2px solid #000;
+      height: 2px;
+      margin: 2px 0;
+    }
+    .button {
+      margin-top: 10px;
+      padding: 6px 12px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .exercise {
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Odejmowanie ułamków zwykłych o tych samych mianownikach - poziom 3</h2>
+  <p>Uzupełnij działanie. Wpisz poprawny ułamek jako wynik.</p>
+  <div id="exercises"></div>
+  <script>
+    const exercises = [{"task": ["1", "−", "1", "2"], "answer": ["1", "2"]}, {"task": ["1", "−", "2", "3"], "answer": ["1", "3"]}, {"task": ["1", "−", "3", "5"], "answer": ["2", "5"]}, {"task": ["1", "−", "1", "4"], "answer": ["3", "4"]}, {"task": ["1", "−", "5", "7"], "answer": ["2", "7"]}, {"task": ["1", "−", "1", "6"], "answer": ["5", "6"]}, {"task": ["1", "−", "3", "8"], "answer": ["5", "8"]}, {"task": ["1", "−", "7", "9"], "answer": ["2", "9"]}, {"task": ["1", "−", "7", "10"], "answer": ["3", "10"]}, {"task": ["1", "−", "4", "9"], "answer": ["5", "9"]}];
+
+    const container = document.getElementById('exercises');
+
+    function createFraction(num, den, readonly = false) {
+      const frac = document.createElement('span');
+      frac.className = 'fraction';
+
+      const numerator = document.createElement('input');
+      numerator.className = 'fraction-input';
+      numerator.value = num;
+      if (readonly) {
+        numerator.setAttribute('readonly', true);
+        numerator.classList.add('readonly-input');
+      }
+
+      const line = document.createElement('div');
+      line.className = 'top';
+
+      const denominator = document.createElement('input');
+      denominator.className = 'fraction-input';
+      denominator.value = den;
+      if (readonly) {
+        denominator.setAttribute('readonly', true);
+        denominator.classList.add('readonly-input');
+      }
+
+      frac.appendChild(numerator);
+      frac.appendChild(line);
+      frac.appendChild(denominator);
+
+      return [frac, numerator, denominator];
+    }
+
+    exercises.forEach((ex, index) => {
+      const div = document.createElement('div');
+      div.className = 'exercise';
+
+      const label = document.createElement('p');
+      label.innerHTML = "<strong>Zadanie " + (index + 1) + ":</strong>";
+      div.appendChild(label);
+
+      const inputOne = document.createElement('input');
+      inputOne.className = 'fraction-input readonly-input';
+      inputOne.value = ex.task[0];
+      inputOne.readOnly = true;
+      div.appendChild(inputOne);
+
+      div.appendChild(document.createTextNode(' − '));
+
+      const [givenFrac] = createFraction(ex.task[2], ex.task[3], true);
+      div.appendChild(givenFrac);
+
+      div.appendChild(document.createTextNode(' = '));
+
+      const [resultFrac, userNum, userDen] = createFraction('', '', false);
+      div.appendChild(resultFrac);
+
+      const checkBtn = document.createElement('button');
+      checkBtn.className = 'button';
+      checkBtn.textContent = 'Sprawdź';
+
+      const result = document.createElement('div');
+      result.className = 'result';
+
+      checkBtn.onclick = () => {
+        const userVals = [userNum.value.trim(), userDen.value.trim()];
+        const correct = ex.answer;
+        const isCorrect = userVals[0] === correct[0] && userVals[1] === correct[1];
+        result.textContent = isCorrect ? '✅ Brawo! Poprawna odpowiedź!' : '❌ Spróbuj jeszcze raz.';
+      };
+
+      div.appendChild(document.createElement('br'));
+      div.appendChild(checkBtn);
+      div.appendChild(result);
+
+      container.appendChild(div);
+    });
+  </script>
+</body>
+</html>

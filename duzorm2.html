@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interaktywne karty pracy</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .fraction {
+      display: inline-block;
+      text-align: center;
+      margin: 0 6px;
+      vertical-align: middle;
+    }
+    .fraction-input {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #000;
+      margin: 2px;
+      font-size: 18px;
+      text-align: center;
+    }
+    .readonly-input {
+      background-color: #eee;
+      pointer-events: none;
+    }
+    .top {
+      border-bottom: 2px solid #000;
+      height: 2px;
+      margin: 2px 0;
+    }
+    .exercise {
+      margin-bottom: 30px;
+    }
+    .button {
+      margin-top: 10px;
+      padding: 6px 12px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .mixed-number {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Dodawanie ułamków zwykłych o różnych mianownikach - poziom 2</h2>
+  <p>Uzupełnij puste pola. Kliknij "Sprawdź", aby zobaczyć, czy odpowiedź jest poprawna.</p>
+  <div id="exercises"></div>
+
+  <script>
+    const exercises = [
+      { task: ['5','8','4','7'], answers: ['35','56','32','56','67','56','1','11','56'] },
+      { task: ['2','3','3','4'], answers: ['8','12','9','12','17','12','1','5','12'] },
+      { task: ['3','5','5','6'], answers: ['18','30','25','30','43','30','1','13','30'] },
+      { task: ['4','7','2','3'], answers: ['12','21','14','21','26','21','1','5','21'] },
+      { task: ['5','6','7','8'], answers: ['20','24','21','24','41','24','1','17','24'] },
+      { task: ['7','10','2','5'], answers: ['7','10','4','10','11','10','1','1','10'] },
+      { task: ['1','2','5','8'], answers: ['4','8','5','8','9','8','1','1','8'] },
+      { task: ['3','4','4','9'], answers: ['27','36','16','36','43','36','1','7','36'] },
+      { task: ['6','7','5','14'], answers: ['12','14','5','14','17','14','1','3','14'] },
+      { task: ['1','3','5','6'], answers: ['2','6','5','6','7','6','1','1','6'] }
+    ];
+
+    const container = document.getElementById('exercises');
+
+    exercises.forEach((ex, index) => {
+      const div = document.createElement('div');
+      div.className = 'exercise';
+
+      const label = document.createElement('p');
+      label.innerHTML = `<strong>Zadanie ${index + 1}:</strong>`;
+      div.appendChild(label);
+
+      const createFraction = (idPrefix, readonly = false) => {
+        const span = document.createElement('span');
+        span.className = 'fraction';
+
+        const num = document.createElement('input');
+        num.className = 'fraction-input';
+        if (readonly) {
+          num.classList.add('readonly-input');
+          num.readOnly = true;
+        }
+        num.id = `${idPrefix}_n`;
+
+        const line = document.createElement('div');
+        line.className = 'top';
+
+        const den = document.createElement('input');
+        den.className = 'fraction-input';
+        if (readonly) {
+          den.classList.add('readonly-input');
+          den.readOnly = true;
+        }
+        den.id = `${idPrefix}_d`;
+
+        span.appendChild(num);
+        span.appendChild(line);
+        span.appendChild(den);
+
+        return span;
+      };
+
+      const createMixed = (idPrefix) => {
+        const wrapper = document.createElement('span');
+        wrapper.className = 'mixed-number';
+
+        const whole = document.createElement('input');
+        whole.className = 'fraction-input';
+        whole.id = `${idPrefix}_w`;
+
+        const frac = createFraction(idPrefix);
+
+        wrapper.appendChild(whole);
+        wrapper.appendChild(frac);
+
+        return wrapper;
+      };
+
+      div.appendChild(createFraction(`ex${index}_f1`, true));
+      div.querySelector(`#ex${index}_f1_n`).value = ex.task[0];
+      div.querySelector(`#ex${index}_f1_d`).value = ex.task[1];
+
+      div.appendChild(document.createTextNode(' + '));
+
+      div.appendChild(createFraction(`ex${index}_f2`, true));
+      div.querySelector(`#ex${index}_f2_n`).value = ex.task[2];
+      div.querySelector(`#ex${index}_f2_d`).value = ex.task[3];
+
+      div.appendChild(document.createTextNode(' = '));
+
+      div.appendChild(createFraction(`ex${index}_a1`));
+      div.appendChild(document.createTextNode(' + '));
+      div.appendChild(createFraction(`ex${index}_a2`));
+      div.appendChild(document.createTextNode(' = '));
+      div.appendChild(createFraction(`ex${index}_res`));
+      div.appendChild(document.createTextNode(' = '));
+      div.appendChild(createMixed(`ex${index}_mixed`));
+
+      const result = document.createElement('div');
+      result.className = 'result';
+
+      const button = document.createElement('button');
+      button.className = 'button';
+      button.innerText = 'Sprawdź';
+      button.onclick = () => {
+        const a1n = document.getElementById(`ex${index}_a1_n`).value.trim();
+        const a1d = document.getElementById(`ex${index}_a1_d`).value.trim();
+        const a2n = document.getElementById(`ex${index}_a2_n`).value.trim();
+        const a2d = document.getElementById(`ex${index}_a2_d`).value.trim();
+        const rn = document.getElementById(`ex${index}_res_n`).value.trim();
+        const rd = document.getElementById(`ex${index}_res_d`).value.trim();
+        const whole = document.getElementById(`ex${index}_mixed_w`).value.trim();
+        const wn = document.getElementById(`ex${index}_mixed_n`).value.trim();
+        const wd = document.getElementById(`ex${index}_mixed_d`).value.trim();
+
+        const correct = ex.answers;
+        const user = [a1n, a1d, a2n, a2d, rn, rd, whole, wn, wd];
+
+        let isCorrect = user.every((val, i) => val === correct[i]);
+        result.textContent = isCorrect ? '✅ Brawo! Poprawna odpowiedź!' : '❌ Spróbuj jeszcze raz.';
+      };
+
+      div.appendChild(document.createElement('br'));
+      div.appendChild(button);
+      div.appendChild(result);
+
+      container.appendChild(div);
+    });
+  </script>
+</body>
+</html>

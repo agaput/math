@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>ODEJMOWANIE UŁAMKÓW - POZIOM 3</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      margin: 0px;
+    }
+
+    .fraction {
+      display: inline-block;
+      text-align: center;
+      margin: 0 6px;
+      vertical-align: middle;
+    }
+
+    .fraction-input {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #000;
+      margin: 2px;
+      font-size: 18px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .readonly-input {
+      background-color: #eee;
+      pointer-events: none;
+      border: 1px solid #000;
+    }
+
+    .fraction .top {
+      border-bottom: 2px solid #000;
+      height: 2px;
+      margin: 2px 0;
+    }
+
+    .button {
+      margin-top: 10px;
+      padding: 6px 12px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .exercise {
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Odejmowanie ułamków zwykłych o tych samych mianownikach - poziom 2</h2>
+  <p>Rozwiąż poniższe zadania. Najpierw odejmij ułamki niewłaściwe, a potem zapisz wynik jako liczbę mieszaną.</p>
+  <div id="exercises"></div>
+
+  <script>
+    const exercises = [
+      { task: ['11','5','3','5'], answers: ['1','3','5'] },
+      { task: ['15','7','5','7'], answers: ['1','3','7'] },
+      { task: ['20','9','7','9'], answers: ['1','4','9'] },
+      { task: ['22','9','5','9'], answers: ['1','7','9'] },
+      { task: ['17','6','4','6'], answers: ['2','1','6'] },
+      { task: ['23','8','6','8'], answers: ['2','1','8'] },
+      { task: ['17','7','5','7'], answers: ['1','5','7'] },
+      { task: ['13','5','2','5'], answers: ['2','1','5'] },
+      { task: ['19','7','4','7'], answers: ['2','1','7'] },
+      { task: ['26','9','7','9'], answers: ['2','1','9'] }
+    ];
+
+    const container = document.getElementById('exercises');
+
+    exercises.forEach((ex, index) => {
+      const div = document.createElement('div');
+      div.className = 'exercise';
+
+      const label = document.createElement('p');
+      label.innerHTML = `<strong>Zadanie ${index + 1}:</strong>`;
+      div.appendChild(label);
+
+      const inputs = [];
+
+      function createFractionValue(numValue, denValue, readonly = false, idPrefix = '') {
+        const frac = document.createElement('span');
+        frac.className = 'fraction';
+
+        const num = document.createElement('input');
+        num.className = 'fraction-input';
+        if (readonly) num.classList.add('readonly-input');
+        num.value = numValue;
+        if (readonly) num.setAttribute('readonly', true);
+        if (idPrefix) num.id = `${idPrefix}_n`;
+
+        const line = document.createElement('div');
+        line.className = 'top';
+
+        const den = document.createElement('input');
+        den.className = 'fraction-input';
+        if (readonly) den.classList.add('readonly-input');
+        den.value = denValue;
+        if (readonly) den.setAttribute('readonly', true);
+        if (idPrefix) den.id = `${idPrefix}_d`;
+
+        frac.appendChild(num);
+        frac.appendChild(line);
+        frac.appendChild(den);
+
+        if (!readonly) inputs.push(num, den);
+        return frac;
+      }
+
+      div.appendChild(createFractionValue(ex.task[0], ex.task[1], true));
+      div.appendChild(document.createTextNode(' - '));
+      div.appendChild(createFractionValue(ex.task[2], ex.task[3], true));
+
+      // Pośredni wynik jako ułamek niewłaściwy
+      div.appendChild(document.createTextNode(' = '));
+      const improper = createFractionValue('', '', false, `ex${index}_imp`);
+      div.appendChild(improper);
+
+      // Liczba mieszana: całość i ułamek
+      div.appendChild(document.createTextNode(' = '));
+      const wholeInput = document.createElement('input');
+      wholeInput.className = 'fraction-input';
+      inputs.push(wholeInput);
+      div.appendChild(wholeInput);
+
+      div.appendChild(createFractionValue('', '', false, `ex${index}_res`));
+
+      const checkBtn = document.createElement('button');
+      checkBtn.className = 'button';
+      checkBtn.textContent = 'Sprawdź';
+
+      const result = document.createElement('div');
+      result.className = 'result';
+
+      checkBtn.onclick = () => {
+        let allInputs = inputs.map(input => input.value.trim());
+        if (allInputs[0] === '') allInputs[0] = '0'; // puste pole na całość = 0
+
+        // Sprawdzaj tylko 3 ostatnie pola: całość, licznik, mianownik
+        let relevantInputs = allInputs.slice(-3);
+        const correct = ex.answers;
+        let isCorrect = (
+          relevantInputs[0] === correct[0] &&
+          relevantInputs[1] === correct[1] &&
+          relevantInputs[2] === correct[2]
+        );
+        result.textContent = isCorrect ? '✅ Brawo! Poprawna odpowiedź!' : '❌ Spróbuj jeszcze raz.';
+      };
+
+      div.appendChild(document.createElement('br'));
+      div.appendChild(checkBtn);
+      div.appendChild(result);
+
+      container.appendChild(div);
+    });
+  </script>
+</body>
+</html>

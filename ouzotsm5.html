@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <title>Interaktywne karty pracy</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .fraction { display: inline-block; text-align: center; margin: 0 4px; vertical-align: middle; }
+    .fraction-input { width: 40px; height: 40px; border: 1px solid #000; font-size: 18px; text-align: center; }
+    .readonly-input { background-color: #eee; pointer-events: none; border: 1px solid #000; }
+    .fraction .top { border-bottom: 2px solid #000; height: 2px; margin: 2px 0; }
+    .button { margin-top: 10px; padding: 6px 12px; font-size: 16px; cursor: pointer; }
+    .result { margin-top: 10px; font-weight: bold; }
+    .exercise { margin-bottom: 30px; }
+  </style>
+</head>
+<body>
+  <h2>Odejmowanie ułamków zwykłych o tych samych mianownikach - poziom 5</h2>
+  <p>Rozwiąż poniższe zadania, wykonując odejmowanie ułamków. Kliknij "Sprawdź", aby zobaczyć, czy odpowiedź jest poprawna.</p>
+  <div id="exercises"></div>
+  <script>
+    const exercises = [{"task": ["10", "3", "4"], "answer": ["9", "1", "4"]}, {"task": ["6", "3", "4"], "answer": ["5", "1", "4"]}, {"task": ["6", "3", "8"], "answer": ["5", "5", "8"]}, {"task": ["10", "1", "18"], "answer": ["9", "17", "18"]}, {"task": ["5", "13", "16"], "answer": ["4", "3", "16"]}, {"task": ["2", "2", "9"], "answer": ["1", "7", "9"]}, {"task": ["7", "4", "11"], "answer": ["6", "7", "11"]}, {"task": ["4", "6", "13"], "answer": ["3", "7", "13"]}, {"task": ["10", "7", "20"], "answer": ["9", "13", "20"]}, {"task": ["4", "4", "17"], "answer": ["3", "13", "17"]}];
+    const container = document.getElementById('exercises');
+
+    function createFraction(num, den, readonly = false) {
+      const frac = document.createElement('span');
+      frac.className = 'fraction';
+      const numerator = document.createElement('input');
+      numerator.className = 'fraction-input';
+      numerator.value = num;
+      if (readonly) {
+        numerator.setAttribute('readonly', true);
+        numerator.classList.add('readonly-input');
+      }
+      const line = document.createElement('div');
+      line.className = 'top';
+      const denominator = document.createElement('input');
+      denominator.className = 'fraction-input';
+      denominator.value = den;
+      if (readonly) {
+        denominator.setAttribute('readonly', true);
+        denominator.classList.add('readonly-input');
+      }
+      frac.appendChild(numerator);
+      frac.appendChild(line);
+      frac.appendChild(denominator);
+      return [frac, numerator, denominator];
+    }
+
+    exercises.forEach((ex, index) => {
+      const div = document.createElement('div');
+      div.className = 'exercise';
+      const label = document.createElement('p');
+      label.innerHTML = "<strong>Zadanie " + (index + 1) + ":</strong>";
+      div.appendChild(label);
+      const one = document.createElement('input');
+      one.className = 'fraction-input readonly-input';
+      one.value = ex.task[0];
+      one.readOnly = true;
+      div.appendChild(one);
+      div.appendChild(document.createTextNode(' − '));
+      const [frac] = createFraction(ex.task[1], ex.task[2], true);
+      div.appendChild(frac);
+      div.appendChild(document.createTextNode(' = '));
+      const resultWhole = document.createElement("input"); resultWhole.className = "fraction-input"; div.appendChild(resultWhole); const [resFrac, userNum, userDen] = createFraction("", "", false); div.appendChild(resFrac);
+      div.appendChild(resFrac);
+
+      const checkBtn = document.createElement('button');
+      checkBtn.className = 'button';
+      checkBtn.textContent = 'Sprawdź';
+      const result = document.createElement('div');
+      result.className = 'result';
+
+      checkBtn.onclick = () => {
+        const correct = ex.answer;
+        const isCorrect = resultWhole.value.trim() === correct[0] && userNum.value.trim() === correct[1] && userDen.value.trim() === correct[2];
+        result.textContent = isCorrect ? '✅ Brawo!' : '❌ Spróbuj jeszcze raz.';
+      };
+
+      div.appendChild(document.createElement('br'));
+      div.appendChild(checkBtn);
+      div.appendChild(result);
+      container.appendChild(div);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<html lang="pl">
+<head>
+<meta charset="utf-8"/>
+<title>Interaktywne karty pracy</title>
+<style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .exercise { margin-bottom: 40px; }
+    .fraction { display: inline-block; text-align: center; vertical-align: middle; margin: 0 10px; }
+    .fraction-input { width: 40px; height: 40px; font-size: 18px; text-align: center; }
+    .small-input { width: 30px; height: 25px; font-size: 14px; text-align: center; vertical-align: top; }
+    .equals { font-size: 24px; margin: 0 10px; }
+    .result { margin-top: 10px; font-weight: bold; }
+    .container { display: flex; align-items: center; gap: 12px; }
+    .side-fraction { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .over-input { display: flex; flex-direction: row; align-items: center; gap: 4px; }
+  
+    .over-input {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .top-multiplier {
+      position: relative;
+      top: -6px;
+    }
+
+    .bottom-multiplier {
+      position: relative;
+      top: 6px;
+    }
+
+    .side-fraction .fraction-bar {
+      width: 100%;
+      border-top: 2px solid black;
+      margin: 4px 0;
+    }
+    
+    .fraction-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .multiplier-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .top-multiplier {
+      margin-bottom: 8px;
+      top: 0;
+    }
+
+    .bottom-multiplier {
+      margin-top: 8px;
+      top: 0;
+    }
+    
+    .top-multiplier {
+      position: relative;
+      top: -20px;
+    }
+
+    .bottom-multiplier {
+      position: relative;
+      top: 20px;
+    }
+    </style>
+</head>
+<body>
+<h2>Rozszerzanie ułamków zwykłych - poziom 2</h2>
+<div id="exercises"></div>
+<script>
+    const exercises = [{'base': ['7', '10'], 'factor': '2', 'result': ['14', '20'], 'missing': 'num'}, {'base': ['3', '8'], 'factor': '3', 'result': ['9', '24'], 'missing': 'num'}, {'base': ['3', '4'], 'factor': '9', 'result': ['27', '36'], 'missing': 'den'}, {'base': ['4', '7'], 'factor': '4', 'result': ['16', '28'], 'missing': 'den'}, {'base': ['2', '7'], 'factor': '2', 'result': ['4', '14'], 'missing': 'num'}, {'base': ['9', '10'], 'factor': '6', 'result': ['54', '60'], 'missing': 'den'}, {'base': ['4', '10'], 'factor': '3', 'result': ['12', '30'], 'missing': 'num'}, {'base': ['9', '10'], 'factor': '7', 'result': ['63', '70'], 'missing': 'den'}, {'base': ['1', '4'], 'factor': '7', 'result': ['7', '28'], 'missing': 'den'}, {'base': ['5', '10'], 'factor': '5', 'result': ['25', '50'], 'missing': 'den'}];
+
+    const container = document.getElementById("exercises");
+
+    exercises.forEach(function(ex, index) {
+      const div = document.createElement('div');
+      div.className = 'exercise';
+
+      const label = document.createElement('div');
+      label.innerHTML = "<strong>Zadanie " + (index + 1) + ":</strong> Uzupełnij brakującą liczbę";
+      label.style.marginBottom = "16px";
+      div.appendChild(label);
+
+      const containerRow = document.createElement("div");
+      containerRow.className = "container";
+
+      const [leftFrac, leftNum, leftDen] = createFraction(ex.base[0], ex.base[1], true);
+      containerRow.appendChild(leftFrac);
+
+      const equals = document.createElement('span');
+      equals.className = 'equals';
+      equals.textContent = '=';
+      containerRow.appendChild(equals);
+
+      const rightNumVal = ex.result[0];
+      const rightDenVal = ex.result[1];
+      const rightNumInput = document.createElement("input");
+      const rightDenInput = document.createElement("input");
+
+      rightNumInput.className = "fraction-input";
+      rightDenInput.className = "fraction-input";
+
+      if (ex.missing === "num") {
+        rightDenInput.value = rightDenVal;
+        rightDenInput.setAttribute("readonly", true);
+        rightDenInput.style.backgroundColor = "#eee";
+      } else {
+        rightNumInput.value = rightNumVal;
+        rightNumInput.setAttribute("readonly", true);
+        rightNumInput.style.backgroundColor = "#eee";
+      }
+
+      const rightFrac = document.createElement("span");
+      rightFrac.className = "fraction";
+      const bar = document.createElement("div");
+      bar.style.borderTop = "2px solid #000";
+      bar.style.margin = "2px 0";
+      rightFrac.appendChild(rightNumInput);
+      rightFrac.appendChild(bar);
+      rightFrac.appendChild(rightDenInput);
+      containerRow.appendChild(rightFrac);
+
+      div.appendChild(containerRow);
+      div.appendChild(document.createElement("br"));
+
+      const checkBtn = document.createElement('button');
+      checkBtn.className = 'button';
+      checkBtn.textContent = 'Sprawdź';
+
+      const result = document.createElement('div');
+      result.className = 'result';
+
+      checkBtn.onclick = function() {
+        
+        const enteredNum = rightNumInput.value.trim();
+        const enteredDen = rightDenInput.value.trim();
+        const expectedNum = ex.result[0];
+        const expectedDen = ex.result[1];
+
+        const correct = (ex.missing === "num"
+          ? enteredNum === expectedNum
+          : enteredDen === expectedDen);
+        console.log("enteredNum:", enteredNum, "expectedNum:", expectedNum);
+        console.log("enteredDen:", enteredDen, "expectedDen:", expectedDen);
+        
+
+        result.textContent = correct ? '✅ Brawo!' : '❌ Spróbuj ponownie.';
+      };
+
+      div.appendChild(checkBtn);
+      div.appendChild(result);
+      container.appendChild(div);
+    });
+
+    function createFraction(num, den, readonly = false) {
+      const wrapper = document.createElement('span');
+      wrapper.className = 'fraction';
+      const inputNum = document.createElement('input');
+      inputNum.className = 'fraction-input';
+      inputNum.value = num;
+      if (readonly) {
+        inputNum.setAttribute('readonly', true);
+        inputNum.style.backgroundColor = '#eee';
+      }
+      const bar = document.createElement('div');
+      bar.style.borderTop = '2px solid #000';
+      bar.style.margin = '2px 0';
+      const inputDen = document.createElement('input');
+      inputDen.className = 'fraction-input';
+      inputDen.value = den;
+      if (readonly) {
+        inputDen.setAttribute('readonly', true);
+        inputDen.style.backgroundColor = '#eee';
+      }
+      wrapper.appendChild(inputNum);
+      wrapper.appendChild(bar);
+      wrapper.appendChild(inputDen);
+      return [wrapper, inputNum, inputDen];
+    }
+        </script>
+</body>
+</html>

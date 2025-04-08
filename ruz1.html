@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html lang="pl">
+<head>
+<meta charset="utf-8"/>
+<title>Interaktywna karta pracy</title>
+<style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .exercise { margin-bottom: 40px; }
+    .fraction { display: inline-block; text-align: center; vertical-align: middle; margin: 0 10px; }
+    .fraction-input { width: 40px; height: 40px; font-size: 18px; text-align: center; }
+    .small-input { width: 30px; height: 25px; font-size: 14px; text-align: center; vertical-align: top; }
+    .equals { font-size: 24px; margin: 0 10px; }
+    .result { margin-top: 10px; font-weight: bold; }
+    .container { display: flex; align-items: center; gap: 12px; }
+    .side-fraction { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .over-input { display: flex; flex-direction: row; align-items: center; gap: 4px; }
+  
+    .over-input {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .top-multiplier {
+      position: relative;
+      top: -6px;
+    }
+
+    .bottom-multiplier {
+      position: relative;
+      top: 6px;
+    }
+
+    .side-fraction .fraction-bar {
+      width: 100%;
+      border-top: 2px solid black;
+      margin: 4px 0;
+    }
+    
+    .fraction-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .multiplier-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .top-multiplier {
+      margin-bottom: 8px;
+      top: 0;
+    }
+
+    .bottom-multiplier {
+      margin-top: 8px;
+      top: 0;
+    }
+    
+    .top-multiplier {
+      position: relative;
+      top: -20px;
+    }
+
+    .bottom-multiplier {
+      position: relative;
+      top: 20px;
+    }
+    </style>
+</head>
+<body>
+<h2>Rozszerzanie ułamków zwykłych - poziom 1</h2>
+<div id="exercises"></div>
+<script>
+    const exercises = [{"base": ["1", "2"], "factor": "8", "result": ["8", "16"]}, {"base": ["2", "3"], "factor": "4", "result": ["8", "12"]}, {"base": ["3", "4"], "factor": "8", "result": ["24", "32"]}, {"base": ["4", "5"], "factor": "5", "result": ["20", "25"]}, {"base": ["5", "6"], "factor": "2", "result": ["10", "12"]}, {"base": ["1", "3"], "factor": "2", "result": ["2", "6"]}, {"base": ["2", "5"], "factor": "5", "result": ["10", "25"]}, {"base": ["3", "5"], "factor": "10", "result": ["30", "50"]}, {"base": ["1", "4"], "factor": "10", "result": ["10", "40"]}, {"base": ["3", "8"], "factor": "5", "result": ["15", "40"]}];
+    const container = document.getElementById("exercises");
+
+    exercises.forEach(function(ex, index) {
+      const div = document.createElement('div');
+      div.className = 'exercise';
+
+      const label = document.createElement('div');
+      label.innerHTML = "<strong>Zadanie " + (index + 1) + ":</strong> Rozszerz ułamek przez <strong>" + ex.factor + "</strong>";
+      label.style.marginBottom = "16px";
+      div.appendChild(label);
+
+      const containerRow = document.createElement("div");
+      containerRow.className = "container";
+
+      // ułamek wejściowy z mnożnikami po prawej stronie
+      const fracWrapper = document.createElement("div");
+      fracWrapper.className = "fraction-wrapper";
+
+      const fracBlock = document.createElement("div");
+      fracBlock.className = "side-fraction";
+
+      const topRow = document.createElement("div");
+      topRow.className = "over-input";
+      const topMult = document.createElement("input");
+      topMult.className = "small-input top-multiplier";
+      const topInput = document.createElement("input");
+      topInput.className = "fraction-input";
+      topInput.value = ex.base[0];
+      topInput.setAttribute('readonly', true);
+      topInput.style.backgroundColor = '#eee';
+      topRow.appendChild(topInput);
+      topRow.appendChild(topMult);
+      fracBlock.appendChild(topRow);
+
+      const bar = document.createElement("div");
+      bar.className = "fraction-bar";
+      fracBlock.appendChild(bar);
+
+      const bottomRow = document.createElement("div");
+      bottomRow.className = "over-input";
+      const bottomMult = document.createElement("input");
+      bottomMult.className = "small-input bottom-multiplier";
+      const bottomInput = document.createElement("input");
+      bottomInput.className = "fraction-input";
+      bottomInput.value = ex.base[1];
+      bottomInput.setAttribute('readonly', true);
+      bottomInput.style.backgroundColor = '#eee';
+      bottomRow.appendChild(bottomInput);
+      bottomRow.appendChild(bottomMult);
+      fracBlock.appendChild(bottomRow);
+
+      const multColumn = document.createElement("div");
+      multColumn.className = "multiplier-column";
+      topMult.className = "small-input top-multiplier";
+      bottomMult.className = "small-input bottom-multiplier";
+      multColumn.appendChild(topMult);
+      multColumn.appendChild(bottomMult);
+      fracWrapper.appendChild(fracBlock);
+      fracWrapper.appendChild(multColumn);
+      containerRow.appendChild(fracWrapper);
+
+      const equals = document.createElement('span');
+      equals.className = 'equals';
+      equals.textContent = '=';
+      containerRow.appendChild(equals);
+
+      const [resFrac, resNum, resDen] = createFraction('', '', false);
+      containerRow.appendChild(resFrac);
+
+      div.appendChild(containerRow);
+      div.appendChild(document.createElement("br"));
+      div.appendChild(document.createElement("br"));
+
+      const checkBtn = document.createElement('button');
+      checkBtn.className = 'button';
+      checkBtn.textContent = 'Sprawdź';
+
+      const result = document.createElement('div');
+      result.className = 'result';
+
+      checkBtn.onclick = function() {
+        const isCorrect =
+          resNum.value.trim() === ex.result[0] &&
+          resDen.value.trim() === ex.result[1] &&
+          topMult.value.trim().replace(/[^0-9]/g, "") === ex.factor &&
+          bottomMult.value.trim().replace(/[^0-9]/g, "") === ex.factor;
+        result.textContent = isCorrect ? '✅ Brawo!' : '❌ Spróbuj ponownie.';
+      };
+
+      div.appendChild(checkBtn);
+      div.appendChild(result);
+      container.appendChild(div);
+    });
+
+    function createFraction(num, den, readonly = false) {
+      const wrapper = document.createElement('span');
+      wrapper.className = 'fraction';
+      const inputNum = document.createElement('input');
+      inputNum.className = 'fraction-input';
+      inputNum.value = num;
+      if (readonly) {
+        inputNum.setAttribute('readonly', true);
+        inputNum.style.backgroundColor = '#eee';
+      }
+      const bar = document.createElement('div');
+      bar.style.borderTop = '2px solid #000';
+      bar.style.margin = '2px 0';
+      const inputDen = document.createElement('input');
+      inputDen.className = 'fraction-input';
+      inputDen.value = den;
+      if (readonly) {
+        inputDen.setAttribute('readonly', true);
+        inputDen.style.backgroundColor = '#eee';
+      }
+      wrapper.appendChild(inputNum);
+      wrapper.appendChild(bar);
+      wrapper.appendChild(inputDen);
+      return [wrapper, inputNum, inputDen];
+    }
+  </script>
+</body>
+</html>
