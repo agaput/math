@@ -70,30 +70,26 @@
 <h2>Dodawanie ułamków zwykłych o tych samych mianownikach - poziom 3</h2>
 <p>Rozwiąż poniższe zadania, wykonując dodawanie ułamków. Kliknij "Sprawdź", aby zobaczyć, czy odpowiedź jest poprawna.</p>
 <div id="exercises"></div>
-
 <script>
   const exercises = [
-    { task: ['5','5','7','6','6','7'], answers: ['11','11','7','12','4','7'] },
-    { task: ['3','4','5','2','3','5'], answers: ['5','7','5','6','2','5'] },
-    { task: ['4','2','3','3','2','3'], answers: ['7','4','3','8','1','3'] },
-    { task: ['2','4','9','1','7','9'], answers: ['3','11','9','4','2','9'] },
-    { task: ['6','2','5','3','3','5'], answers: ['9','5','5','10'] },
-    { task: ['7','1','6','2','5','6'], answers: ['11','13','6','11','1','6'] },
-    { task: ['8','3','8','1','2','8'], answers: ['10','13','8','10','4','8'] },
-    { task: ['5','4','10','2','5','10'], answers: ['9','9','10','9','4','10'] },
-    { task: ['4','2','9','3','4','9'], answers: ['7','14','9','7','2','9'] },
-    { task: ['6','6','12','5','5','12'], answers: ['11','11','12','11','11','12'] }
-  ];
+    { task: ['5','5','7','6','6','7'], answers: ['11', '11', '7', '12', '4', '7'] },
+    { task: ['3','4','5','2','3','5'], answers: ['5', '7', '5', '6', '2', '5'] },
+    { task: ['4','2','3','3','2','3'], answers: ['7', '4', '3', '8', '1', '3'] },
+    { task: ['2','4','9','1','7','9'], answers: ['3', '11', '9', '4', '2', '9'] },
+    { task: ['6','2','5','3','3','5'], answers: ['9', '5', '5', '10', '0', '5'] },
+    { task: ['7','2','6','2','5','6'], answers: ['9', '7', '6', '10', '1', '6'] },
+    { task: ['8','7','8','1','6','8'], answers: ['9', '13', '8', '10', '5', '8'] },
+    { task: ['5','8','10','2','5','10'], answers: ['7', '13', '10', '8', '3', '10'] },
+    { task: ['4','7','9','3','4','9'], answers: ['7', '11', '9', '8', '2', '9'] },
+    { task: ['6','11','12','5','6','12'], answers: ['11', '17', '12', '12', '5', '12'] }
+  ]
 
   const container = document.getElementById('exercises');
+  container.innerHTML = '';
 
   exercises.forEach((ex, index) => {
     const div = document.createElement('div');
     div.className = 'exercise';
-
-    const label = document.createElement('p');
-    label.innerHTML = `<strong>Zadanie ${index + 1}:</strong>`;
-    div.appendChild(label);
 
     const inputs = [];
 
@@ -126,57 +122,62 @@
       frac.appendChild(line);
       frac.appendChild(denominator);
 
-      if (!readonly) inputs.push(numerator, denominator);
-
       return frac;
     }
 
-    function createMixed(hasFraction, idPrefix) {
-      const container = document.createElement('span');
-      container.className = 'mixed-number';
+    function createMixedInput(idPrefix, values, readonly = false) {
+      const wrapper = document.createElement('span');
+      wrapper.className = 'mixed-number';
 
       const whole = document.createElement('input');
       whole.className = 'fraction-input';
       whole.id = `${idPrefix}_w`;
-      inputs.push(whole);
-      container.appendChild(whole);
+      if (readonly) {
+        whole.value = values[0];
+        whole.setAttribute('readonly', true);
+        whole.classList.add('readonly-input');
+      }
+      wrapper.appendChild(whole);
 
-      if (hasFraction) {
-        const frac = createFraction('', '', false, idPrefix);
-        container.appendChild(frac);
+      const frac = document.createElement('span');
+      frac.className = 'fraction';
+
+      const num = document.createElement('input');
+      num.className = 'fraction-input';
+      num.id = `${idPrefix}_n`;
+
+      const line = document.createElement('div');
+      line.className = 'top';
+
+      const den = document.createElement('input');
+      den.className = 'fraction-input';
+      den.id = `${idPrefix}_d`;
+
+      if (readonly) {
+        num.value = values[1];
+        den.value = values[2];
+        num.setAttribute('readonly', true);
+        den.setAttribute('readonly', true);
+        num.classList.add('readonly-input');
+        den.classList.add('readonly-input');
       }
 
-      return container;
+      frac.appendChild(num);
+      frac.appendChild(line);
+      frac.appendChild(den);
+      wrapper.appendChild(frac);
+
+      return wrapper;
     }
 
-    // Liczby mieszane do dodania
-    div.appendChild(createMixed(true, `ex${index}_a`));
-    div.lastChild.querySelector(`#ex${index}_a_w`).value = ex.task[0];
-    div.lastChild.querySelector(`#ex${index}_a_w`).setAttribute('readonly', true);
-    div.lastChild.querySelector(`#ex${index}_a_n`).value = ex.task[1];
-    div.lastChild.querySelector(`#ex${index}_a_n`).setAttribute('readonly', true);
-    div.lastChild.querySelector(`#ex${index}_a_d`).value = ex.task[2];
-    div.lastChild.querySelector(`#ex${index}_a_d`).setAttribute('readonly', true);
-
+    div.appendChild(createMixedInput(`ex${index}_a`, [ex.task[0], ex.task[1], ex.task[2]], true));
     div.appendChild(document.createTextNode(' + '));
-
-    div.appendChild(createMixed(true, `ex${index}_b`));
-    div.lastChild.querySelector(`#ex${index}_b_w`).value = ex.task[3];
-    div.lastChild.querySelector(`#ex${index}_b_w`).setAttribute('readonly', true);
-    div.lastChild.querySelector(`#ex${index}_b_n`).value = ex.task[4];
-    div.lastChild.querySelector(`#ex${index}_b_n`).setAttribute('readonly', true);
-    div.lastChild.querySelector(`#ex${index}_b_d`).value = ex.task[5];
-    div.lastChild.querySelector(`#ex${index}_b_d`).setAttribute('readonly', true);
-
+    div.appendChild(createMixedInput(`ex${index}_b`, [ex.task[3], ex.task[4], ex.task[5]], true));
     div.appendChild(document.createTextNode(' = '));
 
-    // Wynik jako liczba mieszana z ułamkiem niewłaściwym
-    div.appendChild(createMixed(true, `ex${index}_step1`));
+    div.appendChild(createMixedInput(`ex${index}_step1`, ['', '', '']));
     div.appendChild(document.createTextNode(' = '));
-
-    // Wynik końcowy jako liczba mieszana z ułamkiem właściwym
-    const hasFraction = ex.answers.length > 3;
-    div.appendChild(createMixed(hasFraction, `ex${index}_final`));
+    div.appendChild(createMixedInput(`ex${index}_final`, ['', '', '']));
 
     const checkBtn = document.createElement('button');
     checkBtn.className = 'button';
@@ -186,8 +187,12 @@
     result.className = 'result';
 
     checkBtn.onclick = () => {
+      const ids = [
+        `ex${index}_step1_w`, `ex${index}_step1_n`, `ex${index}_step1_d`,
+        `ex${index}_final_w`, `ex${index}_final_n`, `ex${index}_final_d`
+      ];
+      const values = ids.map(id => document.getElementById(id).value.trim());
       const correct = ex.answers;
-      let values = inputs.map(input => input.value.trim());
       const isCorrect = values.length === correct.length && values.every((val, i) => val === correct[i]);
       result.textContent = isCorrect ? '✅ Brawo! Poprawna odpowiedź!' : '❌ Spróbuj jeszcze raz.';
     };
@@ -198,6 +203,5 @@
     container.appendChild(div);
   });
 </script>
-
 </body>
 </html>
