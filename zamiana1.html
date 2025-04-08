@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+
+<html lang="pl">
+<head>
+<meta charset="utf-8"/>
+<title>Zamiana ułamków niewłaściwych</title>
+<style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .fraction { display: inline-block; text-align: center; margin: 0 6px; vertical-align: middle; }
+    .fraction-input { width: 40px; height: 40px; border: 1px solid #000; margin: 2px; font-size: 18px; text-align: center; }
+    .readonly-input { background-color: #eee; pointer-events: none; }
+    .fraction .top { border-bottom: 2px solid #000; height: 2px; margin: 2px 0; }
+    .mixed-number { display: inline-flex; align-items: center; gap: 6px; margin-left: 8px; }
+    .button { margin-top: 10px; padding: 6px 12px; font-size: 16px; cursor: pointer; }
+    .result { margin-top: 10px; font-weight: bold; }
+    .exercise { margin-bottom: 30px; }
+  </style>
+</head>
+<body>
+<h2>Zamień ułamek niewłaściwy na liczbę mieszaną</h2>
+<div id="exercises"></div>
+
+<script>
+  const exercises = [
+    { improper: ['13','4'], mixed: ['3','1','4'] },
+    { improper: ['17','5'], mixed: ['3','2','5'] },
+    { improper: ['25','6'], mixed: ['4','1','6'] },
+    { improper: ['19','4'], mixed: ['4','3','4'] },
+    { improper: ['31','7'], mixed: ['4','3','7'] },
+    { improper: ['14','3'], mixed: ['4','2','3'] },
+    { improper: ['35','8'], mixed: ['4','3','8'] },
+    { improper: ['22','5'], mixed: ['4','2','5'] },
+    { improper: ['29','6'], mixed: ['4','5','6'] },
+    { improper: ['39','10'], mixed: ['3','9','10'] }
+  ];
+
+  const container = document.getElementById('exercises');
+
+  exercises.forEach((ex, index) => {
+    const div = document.createElement('div');
+    div.className = 'exercise';
+
+    const label = document.createElement('p');
+    label.innerHTML = `<strong>Zadanie ${index + 1}:</strong> Zamień ułamek niewłaściwy na liczbę mieszaną`;
+    div.appendChild(label);
+
+    const inputs = [];
+
+    function createFraction(num, den, readonly = false, idPrefix = '') {
+      const frac = document.createElement('span');
+      frac.className = 'fraction';
+
+      const numerator = document.createElement('input');
+      numerator.className = 'fraction-input';
+      numerator.value = num;
+      if (readonly) {
+        numerator.setAttribute('readonly', true);
+        numerator.classList.add('readonly-input');
+      }
+      if (idPrefix) numerator.id = `${idPrefix}_n`;
+
+      const line = document.createElement('div');
+      line.className = 'top';
+
+      const denominator = document.createElement('input');
+      denominator.className = 'fraction-input';
+      denominator.value = den;
+      if (readonly) {
+        denominator.setAttribute('readonly', true);
+        denominator.classList.add('readonly-input');
+      }
+      if (idPrefix) denominator.id = `${idPrefix}_d`;
+
+      frac.appendChild(numerator);
+      frac.appendChild(line);
+      frac.appendChild(denominator);
+
+      return frac;
+    }
+
+    function createMixedInput(idPrefix) {
+      const wrapper = document.createElement('span');
+      wrapper.className = 'mixed-number';
+
+      const whole = document.createElement('input');
+      whole.className = 'fraction-input';
+      whole.id = `${idPrefix}_w`;
+      wrapper.appendChild(whole);
+
+      const frac = document.createElement('span');
+      frac.className = 'fraction';
+
+      const num = document.createElement('input');
+      num.className = 'fraction-input';
+      num.id = `${idPrefix}_n`;
+
+      const line = document.createElement('div');
+      line.className = 'top';
+
+      const den = document.createElement('input');
+      den.className = 'fraction-input';
+      den.id = `${idPrefix}_d`;
+
+      frac.appendChild(num);
+      frac.appendChild(line);
+      frac.appendChild(den);
+
+      wrapper.appendChild(frac);
+
+      inputs.push(whole, num, den);
+      return wrapper;
+    }
+
+    // Wyświetl ułamek niewłaściwy
+    div.appendChild(createFraction(ex.improper[0], ex.improper[1], true));
+    div.appendChild(document.createTextNode(' = '));
+    div.appendChild(createMixedInput(`ex${index}_mixed`));
+
+    const checkBtn = document.createElement('button');
+    checkBtn.className = 'button';
+    checkBtn.textContent = 'Sprawdź';
+
+    const result = document.createElement('div');
+    result.className = 'result';
+
+    checkBtn.onclick = () => {
+      const correct = ex.mixed;
+      const values = inputs.map(input => input.value.trim());
+      const isCorrect = values.length === correct.length && values.every((val, i) => val === correct[i]);
+      result.textContent = isCorrect ? '✅ Brawo! Poprawna odpowiedź!' : '❌ Spróbuj jeszcze raz.';
+    };
+
+    div.appendChild(document.createElement('br'));
+    div.appendChild(checkBtn);
+    div.appendChild(result);
+    container.appendChild(div);
+  });
+</script>
+</body>
+</html>
