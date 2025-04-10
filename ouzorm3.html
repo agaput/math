@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>INTERAKTYWNE KARTY PRACY</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; margin: 0px; }
+    .fraction { display: inline-block; text-align: center; margin: 0 6px; vertical-align: middle; }
+    .fraction-input { width: 40px; height: 40px; border: 1px solid #000; margin: 2px; font-size: 18px; text-align: center; }
+    .readonly-input { background-color: #eee; pointer-events: none; border: 1px solid #000; }
+    .fraction .top { border-bottom: 2px solid #000; height: 2px; margin: 2px 0; }
+    .button { margin-top: 10px; padding: 6px 12px; font-size: 16px; cursor: pointer; }
+    .result { margin-top: 10px; font-weight: bold; }
+    .exercise { margin-bottom: 30px; }
+  </style>
+</head>
+<body>
+  <h2>Odejmowanie ułamków zwykłych o różnych mianownikach - poziom 3</h2>
+  <p>Rozwiąż poniższe zadania, wykonując odejmowanie ułamków. Kliknij "Sprawdź", aby zobaczyć, czy odpowiedź jest poprawna.</p>
+  <div id="exercises"></div>
+
+  <script>
+    const exercises = [{"task": ["7", "9", "3", "8"], "answers": ["56", "72", "27", "72", "29", "72"]}, {"task": ["9", "13", "1", "2"], "answers": ["18", "26", "13", "26", "5", "26"]}, {"task": ["7", "10", "6", "25"], "answers": ["35", "50", "12", "50", "23", "50"]}, {"task": ["11", "15", "4", "25"], "answers": ["55", "75", "8", "75", "47", "75"]}, {"task": ["4", "7", "2", "9"], "answers": ["36", "63", "14", "63", "22", "63"]}, {"task": ["13", "22", "4", "33"], "answers": ["39", "66", "8", "66", "31", "66"]}, {"task": ["5", "6", "3", "8"], "answers": ["40", "48", "18", "48", "22", "48"]}, {"task": ["8", "9", "7", "15"], "answers": ["40", "45", "21", "45", "19", "45"]}, {"task": ["11", "18", "5", "12"], "answers": ["22", "36", "15", "36", "7", "36"]}, {"task": ["2", "3", "3", "10"], "answers": ["20", "30", "9", "30", "11", "30"]}];
+
+    const container = document.getElementById('exercises');
+
+    exercises.forEach((ex, index) => {
+      const div = document.createElement('div');
+      div.className = 'exercise';
+
+      const label = document.createElement('p');
+      label.innerHTML = `<strong>Zadanie ${index + 1}:</strong>`;
+      div.appendChild(label);
+
+      const inputs = [];
+
+      function createFractionValue(numValue, denValue, readonly = false, idPrefix = '') {
+        const frac = document.createElement('span');
+        frac.className = 'fraction';
+
+        const num = document.createElement('input');
+        num.className = 'fraction-input';
+        if (readonly) num.classList.add('readonly-input');
+        num.value = numValue;
+        if (readonly) num.setAttribute('readonly', true);
+        if (idPrefix) num.id = `${idPrefix}_n`;
+
+        const line = document.createElement('div');
+        line.className = 'top';
+
+        const den = document.createElement('input');
+        den.className = 'fraction-input';
+        if (readonly) den.classList.add('readonly-input');
+        den.value = denValue;
+        if (readonly) den.setAttribute('readonly', true);
+        if (idPrefix) den.id = `${idPrefix}_d`;
+
+        frac.appendChild(num);
+        frac.appendChild(line);
+        frac.appendChild(den);
+
+        if (!readonly) inputs.push(num, den);
+        return frac;
+      }
+
+      div.appendChild(createFractionValue(ex.task[0], ex.task[1], true));
+      div.appendChild(document.createTextNode(' - '));
+      div.appendChild(createFractionValue(ex.task[2], ex.task[3], true));
+      div.appendChild(document.createTextNode(' = '));
+
+      div.appendChild(createFractionValue('', '', false, `ex${index}_s1`));
+      div.appendChild(document.createTextNode(' - '));
+      div.appendChild(createFractionValue('', '', false, `ex${index}_s2`));
+      div.appendChild(document.createTextNode(' = '));
+      div.appendChild(createFractionValue('', '', false, `ex${index}_diff`));
+
+      const checkBtn = document.createElement('button');
+      checkBtn.className = 'button';
+      checkBtn.textContent = 'Sprawdź';
+
+      const result = document.createElement('div');
+      result.className = 'result';
+
+      checkBtn.onclick = () => {
+        const correct = ex.answers;
+        let allInputs = inputs.map(input => input.value.trim());
+        let isCorrect = allInputs.length === correct.length &&
+                        allInputs.every((val, i) => val === correct[i]);
+        
+    inputs.forEach((input, i) => {
+      if (input.value.trim() === correct[i]) {
+        input.style.backgroundColor = "#d4edda";  // zielony
+      } else {
+        input.style.backgroundColor = "#f8d7da";  // czerwony
+      }
+    });
+    result.textContent = isCorrect ? '✅ Brawo! Poprawna odpowiedź!' : '❌ Spróbuj jeszcze raz.';
+    
+      };
+
+      div.appendChild(document.createElement('br'));
+      div.appendChild(checkBtn);
+      div.appendChild(result);
+
+      container.appendChild(div);
+    });
+  </script>
+</body>
+</html>
