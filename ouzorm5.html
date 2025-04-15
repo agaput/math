@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang='pl'>
+<head>
+<meta charset='UTF-8'><title>10 zadań – duże znaki</title>
+<style>
+body { font-family: Arial; padding: 20px; }
+.fraction, .mixed { display: inline-block; text-align: center; vertical-align: middle; }
+.fraction-input, .whole-input {
+  width: 34px; height: 34px; border: 1px solid #000; margin: 2px; font-size: 16px; text-align: center;
+}
+.readonly-input { background-color: #eee; pointer-events: none; }
+.fraction .top { border-bottom: 2px solid #000; height: 2px; margin: 2px 0; }
+.button { margin-top: 10px; padding: 6px 12px; font-size: 16px; cursor: pointer; }
+.result { margin-top: 10px; font-weight: bold; }
+.exercise { margin-bottom: 30px; padding: 10px 0;  }
+.symbol {
+  font-size: 24px;
+  font-weight: bold;
+  display: inline-block;
+  margin: 0 8px;
+  color: #333;
+}
+</style>
+</head>
+<body>
+<h2>Odejmowanie liczb mieszanych z pożyczaniem – 10 zadań (duże znaki)</h2>
+<div class='exercise'><p><strong>Zadanie 1:</strong></p><span class='mixed'><input class='whole-input readonly-input' readonly id='e0_m1_w' value='3'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e0_m1_n' value='3'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e0_m1_d' value='4'>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input readonly-input' readonly id='e0_m2_w' value='2'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e0_m2_n' value='6'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e0_m2_d' value='7'>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e0_wsp1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e0_wsp1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e0_wsp1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e0_wsp2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e0_wsp2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e0_wsp2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e0_poz1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e0_poz1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e0_poz1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e0_poz2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e0_poz2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e0_poz2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e0_res_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e0_res_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e0_res_d' value=''>
+    </span>
+    </span><br><button class='button' onclick='check(0)'>Sprawdź</button><div class='result' id='r0'></div></div><div class='exercise'><p><strong>Zadanie 2:</strong></p><span class='mixed'><input class='whole-input readonly-input' readonly id='e1_m1_w' value='5'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e1_m1_n' value='1'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e1_m1_d' value='2'>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input readonly-input' readonly id='e1_m2_w' value='3'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e1_m2_n' value='5'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e1_m2_d' value='6'>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e1_wsp1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e1_wsp1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e1_wsp1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e1_wsp2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e1_wsp2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e1_wsp2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e1_poz1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e1_poz1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e1_poz1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e1_poz2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e1_poz2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e1_poz2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e1_res_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e1_res_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e1_res_d' value=''>
+    </span>
+    </span><br><button class='button' onclick='check(1)'>Sprawdź</button><div class='result' id='r1'></div></div><div class='exercise'><p><strong>Zadanie 3:</strong></p><span class='mixed'><input class='whole-input readonly-input' readonly id='e2_m1_w' value='4'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e2_m1_n' value='2'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e2_m1_d' value='3'>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input readonly-input' readonly id='e2_m2_w' value='1'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e2_m2_n' value='5'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e2_m2_d' value='6'>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e2_wsp1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e2_wsp1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e2_wsp1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e2_wsp2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e2_wsp2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e2_wsp2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e2_poz1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e2_poz1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e2_poz1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e2_poz2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e2_poz2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e2_poz2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e2_res_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e2_res_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e2_res_d' value=''>
+    </span>
+    </span><br><button class='button' onclick='check(2)'>Sprawdź</button><div class='result' id='r2'></div></div><div class='exercise'><p><strong>Zadanie 4:</strong></p><span class='mixed'><input class='whole-input readonly-input' readonly id='e3_m1_w' value='2'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e3_m1_n' value='1'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e3_m1_d' value='3'>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input readonly-input' readonly id='e3_m2_w' value='1'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e3_m2_n' value='3'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e3_m2_d' value='4'>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e3_wsp1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e3_wsp1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e3_wsp1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e3_wsp2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e3_wsp2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e3_wsp2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e3_poz1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e3_poz1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e3_poz1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e3_poz2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e3_poz2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e3_poz2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e3_res_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e3_res_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e3_res_d' value=''>
+    </span>
+    </span><br><button class='button' onclick='check(3)'>Sprawdź</button><div class='result' id='r3'></div></div><div class='exercise'><p><strong>Zadanie 5:</strong></p><span class='mixed'><input class='whole-input readonly-input' readonly id='e4_m1_w' value='6'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e4_m1_n' value='1'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e4_m1_d' value='5'>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input readonly-input' readonly id='e4_m2_w' value='2'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e4_m2_n' value='4'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e4_m2_d' value='5'>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e4_wsp1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e4_wsp1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e4_wsp1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e4_wsp2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e4_wsp2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e4_wsp2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e4_poz1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e4_poz1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e4_poz1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e4_poz2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e4_poz2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e4_poz2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e4_res_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e4_res_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e4_res_d' value=''>
+    </span>
+    </span><br><button class='button' onclick='check(4)'>Sprawdź</button><div class='result' id='r4'></div></div><div class='exercise'><p><strong>Zadanie 6:</strong></p><span class='mixed'><input class='whole-input readonly-input' readonly id='e5_m1_w' value='7'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e5_m1_n' value='1'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e5_m1_d' value='4'>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input readonly-input' readonly id='e5_m2_w' value='3'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e5_m2_n' value='3'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e5_m2_d' value='4'>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e5_wsp1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e5_wsp1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e5_wsp1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e5_wsp2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e5_wsp2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e5_wsp2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e5_poz1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e5_poz1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e5_poz1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e5_poz2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e5_poz2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e5_poz2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e5_res_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e5_res_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e5_res_d' value=''>
+    </span>
+    </span><br><button class='button' onclick='check(5)'>Sprawdź</button><div class='result' id='r5'></div></div><div class='exercise'><p><strong>Zadanie 7:</strong></p><span class='mixed'><input class='whole-input readonly-input' readonly id='e6_m1_w' value='3'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e6_m1_n' value='1'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e6_m1_d' value='6'>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input readonly-input' readonly id='e6_m2_w' value='2'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e6_m2_n' value='5'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e6_m2_d' value='6'>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e6_wsp1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e6_wsp1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e6_wsp1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e6_wsp2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e6_wsp2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e6_wsp2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e6_poz1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e6_poz1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e6_poz1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e6_poz2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e6_poz2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e6_poz2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e6_res_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e6_res_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e6_res_d' value=''>
+    </span>
+    </span><br><button class='button' onclick='check(6)'>Sprawdź</button><div class='result' id='r6'></div></div><div class='exercise'><p><strong>Zadanie 8:</strong></p><span class='mixed'><input class='whole-input readonly-input' readonly id='e7_m1_w' value='5'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e7_m1_n' value='1'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e7_m1_d' value='3'>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input readonly-input' readonly id='e7_m2_w' value='2'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e7_m2_n' value='2'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e7_m2_d' value='3'>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e7_wsp1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e7_wsp1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e7_wsp1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e7_wsp2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e7_wsp2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e7_wsp2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e7_poz1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e7_poz1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e7_poz1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e7_poz2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e7_poz2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e7_poz2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e7_res_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e7_res_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e7_res_d' value=''>
+    </span>
+    </span><br><button class='button' onclick='check(7)'>Sprawdź</button><div class='result' id='r7'></div></div><div class='exercise'><p><strong>Zadanie 9:</strong></p><span class='mixed'><input class='whole-input readonly-input' readonly id='e8_m1_w' value='8'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e8_m1_n' value='1'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e8_m1_d' value='2'>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input readonly-input' readonly id='e8_m2_w' value='4'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e8_m2_n' value='3'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e8_m2_d' value='4'>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e8_wsp1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e8_wsp1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e8_wsp1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e8_wsp2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e8_wsp2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e8_wsp2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e8_poz1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e8_poz1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e8_poz1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e8_poz2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e8_poz2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e8_poz2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e8_res_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e8_res_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e8_res_d' value=''>
+    </span>
+    </span><br><button class='button' onclick='check(8)'>Sprawdź</button><div class='result' id='r8'></div></div><div class='exercise'><p><strong>Zadanie 10:</strong></p><span class='mixed'><input class='whole-input readonly-input' readonly id='e9_m1_w' value='2'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e9_m1_n' value='2'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e9_m1_d' value='3'>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input readonly-input' readonly id='e9_m2_w' value='1'>
+    <span class='fraction'>
+      <input class='fraction-input readonly-input' readonly id='e9_m2_n' value='5'>
+      <div class='top'></div>
+      <input class='fraction-input readonly-input' readonly id='e9_m2_d' value='6'>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e9_wsp1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e9_wsp1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e9_wsp1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e9_wsp2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e9_wsp2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e9_wsp2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e9_poz1_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e9_poz1_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e9_poz1_d' value=''>
+    </span>
+    </span><span class='symbol'>−</span><span class='mixed'><input class='whole-input '  id='e9_poz2_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e9_poz2_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e9_poz2_d' value=''>
+    </span>
+    </span><span class='symbol'>=</span><span class='mixed'><input class='whole-input '  id='e9_res_w' value=''>
+    <span class='fraction'>
+      <input class='fraction-input '  id='e9_res_n' value=''>
+      <div class='top'></div>
+      <input class='fraction-input '  id='e9_res_d' value=''>
+    </span>
+    </span><br><button class='button' onclick='check(9)'>Sprawdź</button><div class='result' id='r9'></div></div>
+<script>
+const answers = {
+0: { wsp1: [3, 21, 28], wsp2: [2, 24, 28], poz1: [2, 49, 28], poz2: [2, 24, 28], res: [0, 25, 28] },
+1: { wsp1: [5, 3, 6], wsp2: [3, 5, 6], poz1: [4, 9, 6], poz2: [3, 5, 6], res: [1, 4, 6] },
+2: { wsp1: [4, 4, 6], wsp2: [1, 5, 6], poz1: [3, 10, 6], poz2: [1, 5, 6], res: [2, 5, 6] },
+3: { wsp1: [2, 4, 12], wsp2: [1, 9, 12], poz1: [1, 16, 12], poz2: [1, 9, 12], res: [0, 7, 12] },
+4: { wsp1: [6, 1, 5], wsp2: [2, 4, 5], poz1: [5, 6, 5], poz2: [2, 4, 5], res: [3, 2, 5] },
+5: { wsp1: [7, 1, 4], wsp2: [3, 3, 4], poz1: [6, 5, 4], poz2: [3, 3, 4], res: [3, 2, 4] },
+6: { wsp1: [3, 1, 6], wsp2: [2, 5, 6], poz1: [2, 7, 6], poz2: [2, 5, 6], res: [0, 2, 6] },
+7: { wsp1: [5, 1, 3], wsp2: [2, 2, 3], poz1: [4, 4, 3], poz2: [2, 2, 3], res: [2, 2, 3] },
+8: { wsp1: [8, 2, 4], wsp2: [4, 3, 4], poz1: [7, 6, 4], poz2: [4, 3, 4], res: [3, 3, 4] },
+9: { wsp1: [2, 4, 6], wsp2: [1, 5, 6], poz1: [1, 10, 6], poz2: [1, 5, 6], res: [0, 5, 6] }
+};
+function check(i) {
+  let ok = true;
+  ['wsp1','wsp2','poz1','poz2','res'].forEach(step => {
+    ['w','n','d'].forEach((p,j) => {
+      const id = `e${i}_${step}_${p}`;
+      const el = document.getElementById(id);
+      if (el) {
+        if (el.value.trim() === answers[i][step][j].toString()) {
+          el.style.backgroundColor = '#d4edda';
+        } else {
+          el.style.backgroundColor = '#f8d7da';
+          ok = false;
+        }
+      }
+    });
+  });
+  document.getElementById('r'+i).textContent = ok ? '✅ Wszystko poprawnie!' : '❌ Coś się nie zgadza.';
+}
+</script>
+</body>
+</html>

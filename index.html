@@ -94,13 +94,13 @@
 			<div class="nav1">
 				<a href="ouzorm4.html">Odejmowanie - poziom 4</a>
 			</div>
+			<div class="nav1">
+				<a href="ouzorm5.html">Odejmowanie - poziom 5</a>
+			</div>
 			
 			</br>Zamiana liczby mieszanej na ułamek niewłaściwy
 			<div class="nav1">
 				<a href="zlmnun1.html">Zamiana - poziom 1</a>
-			</div>
-			<div class="nav1">
-				<a href="zlmnun2.html">Zamiana - poziom 2</a>
 			</div>
 			
 			</br>Skracanie ułamków
@@ -160,15 +160,20 @@
 		2025 © Wszelkie prawa zastrzeżone
 	</div>
 
-	<script>
-		document.querySelectorAll('.nav a').forEach(link => {
-			link.addEventListener('click', function (e) {
-				e.preventDefault();
-				const href = this.getAttribute('href');
-				const random = Date.now(); // unikalny znacznik czasu
-				document.getElementById('content').innerHTML = `<iframe src="${href}?v=${random}" width="100%" style="border:none; height=100vh"></iframe>`;
-				});
+	
+<script>
+	document.querySelectorAll('.nav a').forEach(link => {
+		link.addEventListener('click', function (e) {
+			e.preventDefault();
+			const href = this.getAttribute('href');
+			const random = Date.now(); // unikalny znacznik czasu
+			document.getElementById('content').innerHTML = `<iframe src="${href}?v=${random}" width="100%" style="border:none; height:100vh"></iframe>`;
+
+			// Dodane: przewijanie do góry
+			window.scrollTo({ top: 0, behavior: 'smooth' });
 		});
-	</script>
+	});
+</script>
+
 </body>
 </html>

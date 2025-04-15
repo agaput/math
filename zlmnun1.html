@@ -1,39 +1,40 @@
 
 <!DOCTYPE html>
-
 <html lang="pl">
 <head>
 <meta charset="utf-8"/>
-<title>Interaktywne karty pracy</title>
+<title>Interaktywna karta pracy</title>
 <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
     .fraction { display: inline-block; text-align: center; margin: 0 6px; vertical-align: middle; }
     .fraction-input { width: 40px; height: 40px; border: 1px solid #000; margin: 2px; font-size: 18px; text-align: center; }
     .readonly-input { background-color: #eee; pointer-events: none; }
     .fraction .top { border-bottom: 2px solid #000; height: 2px; margin: 2px 0; }
-    .mixed-number { display: inline-flex; align-items: center; gap: 6px; margin-left: 8px; }
+    .mixed-number { display: inline-flex; align-items: center; gap: 6px; margin-right: 8px; }
     .button { margin-top: 10px; padding: 6px 12px; font-size: 16px; cursor: pointer; }
     .result { margin-top: 10px; font-weight: bold; }
     .exercise { margin-bottom: 30px; }
-  </style>
+</style>
 </head>
 <body>
-<h2>Zamiana ułamka niewłaściwego na liczbę mieszaną</h2>
+<h2>Zamiana liczby mieszanej na ułamek niewłaściwy - poziom 1</h2>
 <div id="exercises"></div>
 
 <script>
-  const exercises = [
-    { improper: ['13','4'], mixed: ['3','1','4'] },
-    { improper: ['17','5'], mixed: ['3','2','5'] },
-    { improper: ['25','6'], mixed: ['4','1','6'] },
-    { improper: ['19','4'], mixed: ['4','3','4'] },
-    { improper: ['31','7'], mixed: ['4','3','7'] },
-    { improper: ['14','3'], mixed: ['4','2','3'] },
-    { improper: ['35','8'], mixed: ['4','3','8'] },
-    { improper: ['22','5'], mixed: ['4','2','5'] },
-    { improper: ['29','6'], mixed: ['4','5','6'] },
-    { improper: ['39','10'], mixed: ['3','9','10'] }
-  ];
+  
+const exercises = [
+  { mixed: ['2','1','3'], improper: ['7','3'] },
+  { mixed: ['3','1','2'], improper: ['7','2'] },
+  { mixed: ['2','3','8'], improper: ['19','8'] },
+  { mixed: ['6','2','3'], improper: ['20','3'] },
+  { mixed: ['3','3','5'], improper: ['18','5'] },
+  { mixed: ['2','7','9'], improper: ['25','9'] },
+  { mixed: ['9','3','4'], improper: ['39','4'] },
+  { mixed: ['10','1','6'], improper: ['61','6'] },
+  { mixed: ['7','5','7'], improper: ['54','7'] },
+  { mixed: ['2','6','13'], improper: ['32','13'] }
+];
+
 
   const container = document.getElementById('exercises');
 
@@ -42,7 +43,7 @@
     div.className = 'exercise';
 
     const label = document.createElement('p');
-    label.innerHTML = `<strong>Zadanie ${index + 1}:</strong> Zamień ułamek niewłaściwy na liczbę mieszaną`;
+    label.innerHTML = `<strong>Zadanie ${index + 1}:</strong> Zamień liczbę mieszaną na ułamek niewłaściwy`;
     div.appendChild(label);
 
     const inputs = [];
@@ -79,43 +80,48 @@
       return frac;
     }
 
-    function createMixedInput(idPrefix) {
+    function createMixedDisplay(whole, num, den) {
       const wrapper = document.createElement('span');
       wrapper.className = 'mixed-number';
 
-      const whole = document.createElement('input');
-      whole.className = 'fraction-input';
-      whole.id = `${idPrefix}_w`;
-      wrapper.appendChild(whole);
+      const wholeInput = document.createElement('input');
+      wholeInput.className = 'fraction-input readonly-input';
+      wholeInput.value = whole;
+      wholeInput.setAttribute('readonly', true);
 
       const frac = document.createElement('span');
       frac.className = 'fraction';
 
-      const num = document.createElement('input');
-      num.className = 'fraction-input';
-      num.id = `${idPrefix}_n`;
+      const numInput = document.createElement('input');
+      numInput.className = 'fraction-input readonly-input';
+      numInput.value = num;
+      numInput.setAttribute('readonly', true);
 
       const line = document.createElement('div');
       line.className = 'top';
 
-      const den = document.createElement('input');
-      den.className = 'fraction-input';
-      den.id = `${idPrefix}_d`;
+      const denInput = document.createElement('input');
+      denInput.className = 'fraction-input readonly-input';
+      denInput.value = den;
+      denInput.setAttribute('readonly', true);
 
-      frac.appendChild(num);
+      frac.appendChild(numInput);
       frac.appendChild(line);
-      frac.appendChild(den);
+      frac.appendChild(denInput);
 
+      wrapper.appendChild(wholeInput);
       wrapper.appendChild(frac);
 
-      inputs.push(whole, num, den);
       return wrapper;
     }
 
-    // Wyświetl ułamek niewłaściwy
-    div.appendChild(createFraction(ex.improper[0], ex.improper[1], true));
+    div.appendChild(createMixedDisplay(...ex.mixed));
     div.appendChild(document.createTextNode(' = '));
-    div.appendChild(createMixedInput(`ex${index}_mixed`));
+
+    const improperFrac = createFraction('', '', false, `ex${index}_improper`);
+    div.appendChild(improperFrac);
+    inputs.push(improperFrac.querySelectorAll('input')[0]); // numerator
+    inputs.push(improperFrac.querySelectorAll('input')[1]); // denominator
 
     const checkBtn = document.createElement('button');
     checkBtn.className = 'button';
@@ -125,10 +131,23 @@
     result.className = 'result';
 
     checkBtn.onclick = () => {
-      const correct = ex.mixed;
-      const values = inputs.map(input => input.value.trim());
-      const isCorrect = values.length === correct.length && values.every((val, i) => val === correct[i]);
-      result.textContent = isCorrect ? '✅ Brawo! Poprawna odpowiedź!' : '❌ Spróbuj jeszcze raz.';
+      const correct = ex.improper;
+      const userValues = inputs.map(input => input.value.trim());
+      const isCorrect = userValues.length === correct.length && userValues.every((val, i) => val === correct[i]);
+      
+    result.textContent = isCorrect ? '✅ Brawo! Poprawna odpowiedź!' : '❌ Spróbuj jeszcze raz.';
+    const [numInput, denInput] = inputs;
+    if (userValues[0] === correct[0]) {
+      numInput.style.backgroundColor = '#c8f7c5';
+    } else {
+      numInput.style.backgroundColor = '#f7c5c5';
+    }
+    if (userValues[1] === correct[1]) {
+      denInput.style.backgroundColor = '#c8f7c5';
+    } else {
+      denInput.style.backgroundColor = '#f7c5c5';
+    }
+    
     };
 
     div.appendChild(document.createElement('br'));
