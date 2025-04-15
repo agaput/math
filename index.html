@@ -160,20 +160,15 @@
 		2025 © Wszelkie prawa zastrzeżone
 	</div>
 
-	
-<script>
-	document.querySelectorAll('.nav a').forEach(link => {
-		link.addEventListener('click', function (e) {
-			e.preventDefault();
-			const href = this.getAttribute('href');
-			const random = Date.now(); // unikalny znacznik czasu
-			document.getElementById('content').innerHTML = `<iframe src="${href}?v=${random}" width="100%" style="border:none; height:100vh"></iframe>`;
-
-			// Dodane: przewijanie do góry
-			window.scrollTo({ top: 0, behavior: 'smooth' });
+	<script>
+		document.querySelectorAll('.nav a').forEach(link => {
+			link.addEventListener('click', function (e) {
+				e.preventDefault();
+				const href = this.getAttribute('href');
+				const random = Date.now(); // unikalny znacznik czasu
+				document.getElementById('content').innerHTML = `<iframe src="${href}?v=${random}" width="100%" style="border:none; height=100vh"></iframe>`;
+				});
 		});
-	});
-</script>
-
+	</script>
 </body>
 </html>
